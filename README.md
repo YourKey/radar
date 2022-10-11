@@ -31,6 +31,10 @@ php artisan migrate
 ```
 php artisan serve
 ```
+Запустить слушатель очередей:
+```
+php artisan queue:listen
+```
 
 ### Roadmap
 - Автоматический запуск парсинга по расписанию
