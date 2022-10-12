@@ -6,7 +6,9 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class ParserResult extends DataTransferObject
 {
-    public string $body;
-    public int $status;
-    public array $headers;
+    public ?string $body;
+    public string $status;
+    public ?int $http_status;
+    public ?string $message;
+    public ?array $headers;
 }

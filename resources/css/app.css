@@ -6,6 +6,10 @@ body {
     background-color: #f6f6f4;
     @apply min-h-screen;
 }
+.bold {
+    @apply font-bold;
+}
+
 .btn-link {
     background-color: rgb(245, 247, 250);
     border-radius: 4px;

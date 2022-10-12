@@ -2,15 +2,22 @@
 
 namespace App\Jobs;
 
+use App\Actions\Notify\sendTelegramNotify;
+use App\Actions\Pages\UpdateLastParseDate;
+use App\Actions\storeErrorParserInfo;
+use App\Actions\storeSnapshot;
+use App\DTO\ParserResult;
 use App\Models\Page;
 use App\Models\Snapshot;
 use App\Services\GuzzleParser;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Throwable;
 
 class parseGuzzleJob implements ShouldQueue
 {
@@ -35,12 +42,21 @@ class parseGuzzleJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $data = (new GuzzleParser($this->page->url, $this->page->page_filters))->parse();
-        if ($data->status == 200) {
-            $snapshot = new Snapshot();
-            $snapshot->data = $data->body;
-            $snapshot->page_id = $this->page->id;
-            $snapshot->save();
-        }
+        if (!$this->page->canBeParsed()) exit();
+        $result = (new GuzzleParser($this->page->url, $this->page->get_filters))->parse();
+        if ($result->status == 'ok') (new storeSnapshot($result, $this->page))->handle();
+        if ($result->status == 'error') (new storeErrorParserInfo($result, $this->page))->handle();
+    }
+
+    /**
+     * Handle a job failure.
+     *
+     * @param  \Throwable  $e
+     * @return void
+     */
+    public function failed(Throwable $e)
+    {
+        $result = new ParserResult(['message' => $e->getMessage(), 'status' => 'error']);
+        (new storeErrorParserInfo($result, $this->page))->handle();
     }
 }

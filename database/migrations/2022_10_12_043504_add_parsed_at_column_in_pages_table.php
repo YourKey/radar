@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddIndexToSpanshotsTable extends Migration
+class AddParsedAtColumnInPagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class AddIndexToSpanshotsTable extends Migration
      */
     public function up()
     {
-        Schema::table('snapshots', function (Blueprint $table) {
-            $table->foreign('page_id')
-                ->references('id')
-                ->on('pages');
+        Schema::table('pages', function (Blueprint $table) {
+            $table->timestamp('parsed_at')->nullable();
         });
     }
 
@@ -27,8 +25,8 @@ class AddIndexToSpanshotsTable extends Migration
      */
     public function down()
     {
-        Schema::table('spanshots', function (Blueprint $table) {
-            $table->dropForeign('page_id');
+        Schema::table('pages', function (Blueprint $table) {
+            $table->dropColumn('parsed_at');
         });
     }
 }

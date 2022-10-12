@@ -33,7 +33,7 @@ class Project extends Model
         return $this->hasManyThrough(Snapshot::class, Page::class);
     }
 
-    public function getProjectSettingsAttribute(): ProjectSettings
+    public function getGetSettingsAttribute(): ProjectSettings
     {
         return new ProjectSettings($this->settings);
     }

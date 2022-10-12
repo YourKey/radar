@@ -14,10 +14,12 @@ class Page extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['url', 'filters', 'project_id'];
+    protected $fillable = ['url', 'filters', 'project_id', 'parsed_at', 'parser_message'];
 
     protected $casts = [
-        'filters' => 'json'
+        'filters' => 'json',
+        'parsed_at' => 'datetime',
+        'parser_message' => 'json',
     ];
 
     public function project(): BelongsTo
@@ -30,7 +32,7 @@ class Page extends Model
         return $this->hasMany(Snapshot::class)->orderByDesc('created_at');
     }
 
-    public function snapshot(): Snapshot
+    public function snapshot()
     {
         return $this->snapshots()->first();
     }
@@ -40,15 +42,19 @@ class Page extends Model
         return route('projects.snapshots', [$this->project, $this]);
     }
 
-    public function getPageFiltersAttribute(): PageFilters
+    public function getGetFiltersAttribute(): PageFilters
     {
-//        $filters = $this->filters;
-//        if (is_string($filters)) $filters = json_decode($this->filters, true);
         return new PageFilters($this->filters);
     }
 
     public function getSnapshotLastUpdateAttribute(): Carbon
     {
         return $this->snapshot()->created_at;
+    }
+
+    public function canBeParsed(): bool
+    {
+        if ($this->parsed_at === null) return true;
+        return Carbon::now()->diffInHours($this->parsed_at)+2 >= $this->project->get_settings->update_range;
     }
 }

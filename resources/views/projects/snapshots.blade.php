@@ -37,13 +37,13 @@
         <div class="card-body">
             <div class="card-title">Parser settings</div>
             <div>
-                Parsing type: {{ $page->page_filters->type }}
+                Parsing type: {{ $page->get_filters->type }}
             </div>
             <div>
-                Selector: {{ $page->page_filters->selector ?? '–' }}
+                Selector: {{ $page->get_filters->selector ?? '–' }}
             </div>
             <div>
-                Remove selector: {{ $page->page_filters->removeSelector ?? '–' }}
+                Remove selector: {{ $page->get_filters->removeSelector ?? '–' }}
             </div>
         </div>
     </div>

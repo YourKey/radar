@@ -17,7 +17,11 @@ class ProjectFactory extends Factory
         return [
             'name' => $this->faker->company,
             'user_id' => User::inRandomOrder()->first()->id,
-            'settings' => ['update_range' => '7'],
+            'settings' => [
+                'update_range' => 7*24,
+                'telegram_fail_notify' => true,
+                'telegram_success_notify' => false
+            ],
         ];
     }
 }

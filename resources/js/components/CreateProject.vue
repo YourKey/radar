@@ -2,24 +2,35 @@
     <div class="card bg-base-100 shadow rounded">
         <div class="card-body">
             <form @submit.prevent="submit">
-                <div class="card-title mt-3">Name</div>
+                <div class="card-title mt-3">Project name</div>
                 <input type="text" placeholder="Name" class="input input-bordered w-full max-w-xs" v-model="name" />
-                <div class="card-title mt-3">Pages</div>
+                <div class="card-title mt-3">Pages for parse</div>
                 <input-repeater ref="repeater"></input-repeater>
                 <div class="card-title mt-3">Settings</div>
-                <div class="flex">
-                    <label class="label bold-weight-bold">How often to look for changes?</label>
-                    <label class="label cursor-pointer">
+                <div class="form-control">
+                    <label class="label font-bold">How often to look for changes?</label>
+                    <label class="label cursor-pointer w-52">
                         <span class="label-text mr-1">Everyday</span>
-                        <input type="radio" name="update_range" value="1" v-model="settings.update_range" class="radio checked:bg-red-500" />
+                        <input type="radio" name="update_range" value="24" v-model.number="settings.update_range" class="radio checked:bg-red-500" />
                     </label>
-                    <label class="label cursor-pointer">
+                    <label class="label cursor-pointer w-52">
                         <span class="label-text mr-1">Every week</span>
-                        <input type="radio" name="update_range" value="7" v-model="settings.update_range" class="radio checked:bg-blue-500" />
+                        <input type="radio" name="update_range" value="168" v-model.number="settings.update_range" class="radio checked:bg-blue-500" />
+                    </label>
+                    <label class="label cursor-pointer w-52">
+                        <span class="label-text mr-1">Every month</span>
+                        <input type="radio" name="update_range" value="720" v-model.number="settings.update_range" class="radio checked:bg-green-500" />
+                    </label>
+                </div>
+                <div class="form-control w-52 mt-2">
+                    <div class="font-bold">Telegram notify</div>
+                    <label class="label cursor-pointer">
+                        <span class="label-text mr-1">🔴 fail parse notify</span>
+                        <input type="checkbox" name="telegram_fail_notify" value="true" v-model="settings.telegram_fail_notify" class="checkbox checked:bg-blue-500" />
                     </label>
                     <label class="label cursor-pointer">
-                        <span class="label-text mr-1">Every month</span>
-                        <input type="radio" name="update_range" value="30" v-model="settings.update_range" class="radio checked:bg-green-500" />
+                        <span class="label-text mr-1">🟢 success parse notify</span>
+                        <input type="checkbox" name="telegram_success_notify" value="true" v-model="settings.telegram_success_notify" class="checkbox checked:bg-blue-500" />
                     </label>
                 </div>
                 <div class="form-group">
@@ -41,7 +52,9 @@ export default {
         return {
             name: null,
             settings: {
-                update_range: 30,
+                update_range: 24,
+                telegram_fail_notify: true,
+                telegram_success_notify: false,
             },
             token: document.querySelector('meta[name="token"]').content,
         }
@@ -64,9 +77,6 @@ export default {
           })
       }
     },
-    mounted() {
-        // this.repeater = this.$refs.repeater.pages;
-    }
 }
 </script>
 

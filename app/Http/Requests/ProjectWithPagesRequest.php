@@ -26,7 +26,9 @@ class ProjectWithPagesRequest extends FormRequest
         return [
             'name' => 'required|string',
             'settings' => 'required|array',
-            'settings.update_range' => 'required|int|in:1,7,30',
+            'settings.update_range' => 'required|integer|in:24,168,720',
+            'settings.telegram_fail_notify' => 'required|boolean',
+            'settings.telegram_success_notify' => 'required|boolean',
             'pages' => 'required|array',
             'pages.*.url' => 'required|url',
             'pages.*.filters' => 'required|array',

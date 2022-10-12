@@ -58,7 +58,7 @@ class ProjectTest extends TestCase
     {
         $user = User::factory()->create();
         $project = $user->projects()->create(
-            Project::factory()->make()->toArray()
+            Project::factory()->make(['user_id' => $user->id])->toArray()
         );
 
         $this->assertEquals($user->id, $project->user_id);
