@@ -12,11 +12,11 @@ use Jfcherng\Diff\Renderer\RendererConstant;
 
 class PageController extends Controller
 {
-    public function show(Project $project, Page $page): View
+    public function show(Project $project, Page $page, DiffService $diff_service): View
     {
         $page->load('snapshots')->loadCount('snapshots');
 
-        $diff = (new DiffService())->diffSnapshots($page->snapshots);
+        $diff = $diff_service->diffSnapshots($page->snapshots);
 
         return view('projects.snapshots', compact('project', 'page', 'diff'));
     }

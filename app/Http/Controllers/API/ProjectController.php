@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\DB;
 class ProjectController extends Controller
 {
 
-    public function store(ProjectWithPagesRequest $request): Project
+    public function store(ProjectWithPagesRequest $request, ProjectService $project_service): Project
     {
-        return (new ProjectService())->storeProjectWithPages($request);
+        return $project_service->storeProjectWithPages($request);
     }
 }
